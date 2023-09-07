@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Registro de Usuario</h1>
+
+        <form id="item-form">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Número de Teléfono:</label>
+                <input type="text" id="telefono" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Agregar</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Número de Teléfono</th>
+                        <th>Correo Electrónico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="item-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        const form = document.getElementById('item-form');
+        const itemList = document.getElementById('item-list');
+
+        // Array para almacenar los elementos
+        let items = [];
+
+        // Función para agregar un elemento
+        function addItem(itemData) {
+            items.push(itemData);
+            displayItems();
+            showSuccessAlert();
+        }
+        function addItem2(itemData) {
+            items.push(itemData);
+            displayItems();
+            
+        }
+
+        // Función para mostrar los elementos
+        function displayItems() {
+            itemList.innerHTML = '';
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td>${item.nombre}</td>
+                <td>${item.apellido}</td>
+                <td>${item.telefono}</td>
+                <td>${item.correo}</td>
+                <td>
+                    <button class="btn btn-info btn-sm" onclick="editItem(${index})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteItem(${index})">Eliminar</button>
+                </td>
+            `;
+                itemList.appendChild(tr);
+            });
+        }
+
+        // Función para mostrar una alerta de éxito
+        function showSuccessAlert() {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Usuario registrado con éxito!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+
+        // Función para editar un elemento
+        function editItem(index) {
+            const newItemData = prompt('Editar elemento:', JSON.stringify(items[index]));
+            if (newItemData !== null) {
+                const newItem = JSON.parse(newItemData);
+                items[index] = newItem;
+                displayItems();
+            }
+        }
+
+        // Función para eliminar un elemento
+        function deleteItem(index) {
+            const confirmation = confirm('¿Estás seguro de que deseas eliminar este elemento?');
+            if (confirmation) {
+                items.splice(index, 1);
+                displayItems();
+            }
+        }
+// Función para agregar un usuario por defecto
+function addDefaultUser() {
+            const defaultUser = {
+                nombre: 'John',
+                apellido: 'Doe',
+                telefono: '123-456-7890',
+                correo: 'john@example.com'
+            };
+            addItem2(defaultUser);
+        }
+
+        // Agregar usuario por defecto al cargar la página
+        addDefaultUser();
+        // Manejar la presentación inicial
+        displayItems();
+        
+        // Manejar la presentación del formulario
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+
+            if (nombre !== '' && apellido !== '' && telefono !== '' && correo !== '') {
+                const newItem = {
+                    nombre: nombre,
+                    apellido: apellido,
+                    telefono: telefono,
+                    correo: correo
+                };
+
+                addItem(newItem);
+
+                // Limpiar campos del formulario
+                document.getElementById('nombre').value = '';
+                document.getElementById('apellido').value = '';
+                document.getElementById('telefono').value = '';
+                document.getElementById('correo').value = '';
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
